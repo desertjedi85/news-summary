@@ -1,0 +1,6 @@
+{
+    "require": {
+        "scotteh/php-goose": "dev-master",
+        "php-science/textrank": "dev-master"
+    }
+}
