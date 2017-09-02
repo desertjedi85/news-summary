@@ -8,9 +8,10 @@ use Goose\Client as GooseClient;
 use PhpScience\TextRank\Tool\StopWords\English;
 
 if (isset($_POST["searchWord"])) {
-    $query = $_POST["searchWord"];
+    $query = htmlspecialchars($_POST["searchWord"]);
+    $query = str_replace(" ", "+", $query);
 } else {
-    $query = "hurricane";
+    $query = "bitcoin";
 }
 
 // $url = "https://www.nytimes.com/2017/08/30/us/hurricane-center-timeline.html&p=devex";
@@ -22,11 +23,12 @@ getBingResults($query,$urlARRAY);
 foreach ($urlARRAY as $url) {
     $titleArray = array();
     $articleArray = array();
+    $errorArrayNoText = array();
     
     if (remoteURLExists($url)) {
-        getArticle($url,$titleArray,$articleArray);
+        getArticle($url,$titleArray,$articleArray,$errorArrayNoText);
         
-        if (count($titleArray) > 0) {
+        if (count($titleArray) > 0 && count($articleArray) > 0) {
             echo "<div class='panel panel-default'>";
             for ($i=0; $i < count($titleArray); $i++) {
                 echo "<div class='panel-heading'><h4><a href=".$url.">" . $titleArray[$i] . "</a></h4></div><br>";
@@ -36,24 +38,31 @@ foreach ($urlARRAY as $url) {
         } else {
             "Error returning articles.<br><br>";
         }
+
+        if (count($errorArrayNoText) > 0) {
+            echo "<div class='panel panel-default'>";
+            echo "<div class='panel-heading'><h4>" . count($errorArrayNoText) . " URLs had errors</h4></div>";
+            echo "<div class='panel-body'>";
+            foreach ($errorArrayNoText as $errorUrl) {
+                echo "<p class='articleText'>" . $errorUrl . "</p>";
+            }
+            echo "</div>";
+        }
     }
 }
 
-
-
-// print_r(summarize($articleText));
-
-function getArticle($url,&$titleArray,&$articleArray) {
+function getArticle($url,&$titleArray,&$articleArray,&$errorArrayNoText) {
     $goose = new GooseClient();
     $article = $goose->extractContent($url);
     
     if ($articleText = $article->getCleanedArticleText()) {
         // echo "ArticleText: " . $articleText . "<br><br>";
         $articleTitle = $article->getTitle();
-        if (!isset($articleTitle)) {
-            $articleTitle = "Title Could Not Be Retrieved";
+        if (!isset($articleTitle) && !isset($articleText)) {
+            $articleTitle = "Article Data Could Not Be Retrieved";
         }
 
+        
         $result = array();
         summarize($articleText,$result);
         $titleArray[] = $articleTitle;
@@ -65,7 +74,7 @@ function getArticle($url,&$titleArray,&$articleArray) {
         $articleArray[] = $string;
         // return $articleArray;
     } else {
-        echo "No Article Text for <a href=".$url.">".$url."</a><br><br>";
+        $errorArrayNoText[] = $url;
     }
     
 }
@@ -199,9 +208,6 @@ function remoteURLExists($url) {
     } else {
         $ret = false;
     }
-    //if request did not fail
-    
-
     curl_close($ch);
 
     return $ret;
