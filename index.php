@@ -2,11 +2,16 @@
 
 <html>
 <head>
+    <title>Search Current Events</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://bootswatch.com/spacelab/bootstrap.min.css">
 
     <style>
+        body {
+            background-color: #ffffff;
+        }
         .articleText {
             font-size: 16;
         }
@@ -29,7 +34,7 @@
         <div class="col-lg-4">
             <h4>Summarize articles from top news sites</h4><br>
             <form id="searchBingForm">
-                <input type="button" class="btn btn-default" id="btnSearchCurrentEvents" value="Search Current Events">
+                <input type="button" class="btn btn-primary" id="btnSearchCurrentEvents" value="Search Current Events">
             </form> 
         </div>
         <div class="col-lg-4">
@@ -38,7 +43,7 @@
                 <div class="form-group">
                     <input type="text" class="form-control" id="txtSearchBing" placeholder="Query Bing News Articles">
                 </div>
-                <input type="button" class="btn btn-default" id="btnSubmitBingSearch" value="Search Bing News">
+                <input type="button" class="btn btn-primary" id="btnSubmitBingSearch" value="Search Bing News">
             </form> 
         </div>
     </div>

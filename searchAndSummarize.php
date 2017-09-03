@@ -3,7 +3,7 @@ namespace PhpScience\TextRank;
 
 ini_set('max_execution_time', 200);
 
-require("vendor\autoload.php");
+require("/home/searchcu/public_html/vendor/autoload.php");
 use Goose\Client as GooseClient;
 use PhpScience\TextRank\Tool\StopWords\English;
 
@@ -29,7 +29,7 @@ foreach ($urlARRAY as $url) {
         getArticle($url,$titleArray,$articleArray,$errorArrayNoText);
         
         if (count($titleArray) > 0 && count($articleArray) > 0) {
-            echo "<div class='panel panel-default'>";
+            echo "<div class='panel panel-primary'>";
             for ($i=0; $i < count($titleArray); $i++) {
                 echo "<div class='panel-heading'><h4><a href=".$url.">" . $titleArray[$i] . "</a></h4></div><br>";
                 echo "<div class='panel-body'><p class='articleText'>" . $articleArray[$i] . "</p></div><br><br>";  
@@ -40,7 +40,7 @@ foreach ($urlARRAY as $url) {
         }
 
         if (count($errorArrayNoText) > 0) {
-            echo "<div class='panel panel-default'>";
+            echo "<div class='panel panel-primary'>";
             echo "<div class='panel-heading'><h4>" . count($errorArrayNoText) . " URLs had errors</h4></div>";
             echo "<div class='panel-body'>";
             foreach ($errorArrayNoText as $errorUrl) {
