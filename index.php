@@ -50,7 +50,8 @@
     <div class="row">
         <div class="col-lg-4">&nbsp;</div>
         <div class="col-lg-4" id="divLoadingGif">
-            <img src="includes/images/loading.gif">
+            <img src="includes/images/loading.gif"><br>
+            <span id="bePatient">Please be patient your results are loading...</span>
         </div>
     </div>
     <br>

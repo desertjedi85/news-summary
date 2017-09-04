@@ -33,7 +33,7 @@ foreach ($sources as $source) {
         $articleUrl = $articleData["url"];
 
         if (remoteURLExists($articleUrl) === true) {
-            if (!preg_match("/www\.cnn\.com/",$articleUrl) && !preg_match("/www\.foxsports\.com/",$articleUrl)) {
+            if (!preg_match("/www\.cnn\.com/",$articleUrl) && !preg_match("/www\.foxsports\.com/",$articleUrl) && !preg_match("/time\.com/",$articleUrl)) {
                 $urlArray[] = $articleUrl;
                 $articleTitle = $articleData["title"];
                 // echo $articleTitle . "<br>";
@@ -59,7 +59,7 @@ foreach ($sources as $source) {
         }
         
     } else {
-        echo "Article did not return results<br>";
+        // echo "Article did not return results<br>";
     }
 }
 

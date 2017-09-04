@@ -25,28 +25,30 @@ foreach ($urlARRAY as $url) {
     $articleArray = array();
     $errorArrayNoText = array();
     
-    if (remoteURLExists($url)) {
-        getArticle($url,$titleArray,$articleArray,$errorArrayNoText);
-        
-        if (count($titleArray) > 0 && count($articleArray) > 0) {
-            echo "<div class='panel panel-primary'>";
-            for ($i=0; $i < count($titleArray); $i++) {
-                echo "<div class='panel-heading'><h4><a href=".$url.">" . $titleArray[$i] . "</a></h4></div><br>";
-                echo "<div class='panel-body'><p class='articleText'>" . $articleArray[$i] . "</p></div><br><br>";  
+    if (remoteURLExists($url) === true) {
+        if (!preg_match("/www\.cnn\.com/",$url) && !preg_match("/www\.foxsports\.com/",$url) && !preg_match("/www\.ft\.com/",$url) && !preg_match("/www\.time\.com/",$url)) {
+            getArticle($url,$titleArray,$articleArray,$errorArrayNoText);
+            
+            if (count($titleArray) > 0 && count($articleArray) > 0) {
+                echo "<div class='panel panel-info'>";
+                for ($i=0; $i < count($titleArray); $i++) {
+                    echo "<div class='panel-heading'><h4><a href=".$url.">" . $titleArray[$i] . "</a></h4></div><br>";
+                    echo "<div class='panel-body'><p class='articleText'>" . $articleArray[$i] . "</p></div><br><br>";  
+                }
+                echo "</div>";
+            } else {
+                "Error returning articles.<br><br>";
             }
-            echo "</div>";
-        } else {
-            "Error returning articles.<br><br>";
-        }
 
-        if (count($errorArrayNoText) > 0) {
-            echo "<div class='panel panel-primary'>";
-            echo "<div class='panel-heading'><h4>" . count($errorArrayNoText) . " URLs had errors</h4></div>";
-            echo "<div class='panel-body'>";
-            foreach ($errorArrayNoText as $errorUrl) {
-                echo "<p class='articleText'>" . $errorUrl . "</p>";
+            if (count($errorArrayNoText) > 0) {
+                echo "<div class='panel panel-info'>";
+                echo "<div class='panel-heading'><h4>" . count($errorArrayNoText) . " URLs had errors</h4></div>";
+                echo "<div class='panel-body'>";
+                foreach ($errorArrayNoText as $errorUrl) {
+                    echo "<p class='articleText'>" . $errorUrl . "</p>";
+                }
+                echo "</div>";
             }
-            echo "</div>";
         }
     }
 }
