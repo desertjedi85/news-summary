@@ -37,48 +37,26 @@
                 <div class="form-group">
                     <select id="selectSource" class="form-control input-lg" name="selectSource">
                         <option value="reuters" selected>Reuters</option>
-                        <option value="associated-press">Associated Press</option>
                         <option value="bbc-news">BBC News</option>
                         <option value="google-news">Google News</option>
-                        <option value="al-jazeera-english">Al Jazeera English</option>
                         <option value="ars-technica">Ars Technica</option>
                         <option value="bbc-sport">BBC Sport</option>
-                        <option value="bild">Bild</option>
                         <option value="bloomberg">Bloomberg</option>
-                        <option value="breitbart-news">Breitbart News</option>
                         <option value="business-insider">Business Insider</option>
                         <option value="business-insider-uk">Business Insider UK</option>
-                        <option value="buzzfeed">Buzzfeed</option>
                         <option value="cnbc">CNBC</option>
-                        <option value="daily-mail">Daily Mail</option>
-                        <option value="engadget">Engadget</option>
-                        <option value="entertainment-weekly">Entertainment Weekly</option>
                         <option value="espn">ESPN</option>
-                        <option value="espn-cric-info">ESPN Cric Info</option>
-                        <option value="focus">Focus</option>
-                        <option value="fortune">Fortune</option>
                         <option value="hacker-news">Hacker News</option>
                         <option value="ign">IGN</option>
                         <option value="independent">Independent</option>
-                        <option value="mashable">Mashable</option>
-                        <option value="mtv-news">MTV News</option>
-                        <option value="national-geographic">National Geographic</option>
-                        <option value="new-scientist">New Scientist</option>
                         <option value="newsweek">Newsweek</option>
                         <option value="new-york-magazine">New York Magazine</option>
-                        <option value="polygon">Polygon</option>
-                        <option value="reddit-r-all">Reddit /r/all</option>
-                        <option value="techcrunch">TechCrunch</option>
+                        <option value="polygon">Polygon</option>   
                         <option value="TechRadar">TechRadar</option>
                         <option value="the-economist">The Economist</option>
                         <option value="the-guardian-uk">The Guardian (UK)</option>
-                        <option value="the-huffington-post">The Huffington Post</option>
                         <option value="the-new-york-times">The New York Times</option>
-                        <option value="the-next-web">The Next Web</option>
-                        <option value="the-telegraph">The Telegraph</option>
                         <option value="the-verge">The Verge</option>
-                        <option value="the-wall-street-journal">The Wall Street Journal</option>
-                        <option value="usa-today">USA Today</option>
                     </select>
                     <br>
                     <input type="button" class="btn btn-primary" id="btnSearchCurrentEvents" value="Search Current Events">
@@ -191,9 +169,10 @@ $(document).ready(function() {
             $("#displayResultsDiv").html("");
             $("#displayResultsDiv").hide();
             $("#divLoadingGif").show();
-            
+            var source = $("#selectSource").val();
+            // alert(source);
             $.post("getCurrentEvents.php", 
-            {}, 
+            {source: source}, 
             function(data) {
                 // $.post("searchWord.php",
                 // {searchWord: searchWord},
