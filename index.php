@@ -44,9 +44,7 @@
                         <option value="bloomberg">Bloomberg</option>
                         <option value="business-insider">Business Insider</option>
                         <option value="business-insider-uk">Business Insider UK</option>
-                        <option value="cnbc">CNBC</option>
                         <option value="espn">ESPN</option>
-                        <option value="hacker-news">Hacker News</option>
                         <option value="ign">IGN</option>
                         <option value="independent">Independent</option>
                         <option value="newsweek">Newsweek</option>

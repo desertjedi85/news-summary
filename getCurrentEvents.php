@@ -9,8 +9,8 @@ if (isset($_POST["source"])) {
 // ini_set("include_path", "/home/searchcu/public_html/". ini_get("include_path") );
 ini_set('max_execution_time', 200);
 
-// require("/home/searchcu/public_html/vendor/autoload.php");
-require("vendor\autoload.php");
+require("/home/searchcu/public_html/vendor/autoload.php");
+// require("vendor\autoload.php");
 
 use Goose\Client as GooseClient;
 use PhpScience\TextRank\Tool\StopWords\English;
@@ -52,7 +52,7 @@ foreach ($articles as $articleData) {
 }
 
 if (count($titleArray) > 0 && count($articleArray) > 0 && count($urlArray) > 0) {
-    
+    updateMetaData($source);
     for ($i = 0; $i < count($titleArray); $i++) {
         if (isset($titleArray[$i]) && isset($articleArray[$i]) && isset($urlArray[$i])) {
             echo "<div class='panel panel-info'>";
@@ -166,4 +166,21 @@ function remoteURLExists($url) {
     curl_close($ch);
 
     return $ret;
+}
+
+function updateMetaData ($source) {
+    $ip = $_SERVER["REMOTE_ADDR"];
+    $mysqli = new \mysqli('localhost', 'searchcu_update', 'UpdateMyData!', 'searchcu_searches');
+    if ($mysqli->connect_errno) {
+        echo "Errno: " . $mysqli->connect_errno . "\n";
+        echo "Error: " . $mysqli->connect_error . "\n";
+        // exit();
+        //TODO: Add error table
+    }
+
+    $stmt = $mysqli->prepare("INSERT INTO metadata (ip,source) VALUES (?,?)");
+    $stmt->bind_param('ss', $ip,$source);
+    $stmt->execute();
+
+    // echo "URL Added Successfully.";
 }
