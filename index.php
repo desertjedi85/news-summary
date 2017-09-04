@@ -31,19 +31,46 @@
 <br />  
 <div class="container">
     <div class="row">
-        <div class="col-lg-4">
-            <h4>Summarize articles from top news sites</h4><br>
-            <form id="searchBingForm">
-                <input type="button" class="btn btn-primary" id="btnSearchCurrentEvents" value="Search Current Events">
-            </form> 
-        </div>
-        <div class="col-lg-4">
-            <h4>Summarize articles from Bing news results</h4><br>
+        <div class="col-lg-5">
+            <h3>Summarize articles from top news sites</h3><br>
             <form id="searchBingForm">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="txtSearchBing" placeholder="Query Bing News Articles">
+                    <select id="selectSource" class="form-control input-lg" name="selectSource">
+                        <option value="reuters" selected>Reuters</option>
+                        <option value="bbc-news">BBC News</option>
+                        <option value="google-news">Google News</option>
+                        <option value="ars-technica">Ars Technica</option>
+                        <option value="bbc-sport">BBC Sport</option>
+                        <option value="bloomberg">Bloomberg</option>
+                        <option value="business-insider">Business Insider</option>
+                        <option value="business-insider-uk">Business Insider UK</option>
+                        <option value="cnbc">CNBC</option>
+                        <option value="espn">ESPN</option>
+                        <option value="hacker-news">Hacker News</option>
+                        <option value="ign">IGN</option>
+                        <option value="independent">Independent</option>
+                        <option value="newsweek">Newsweek</option>
+                        <option value="new-york-magazine">New York Magazine</option>
+                        <option value="polygon">Polygon</option>   
+                        <option value="TechRadar">TechRadar</option>
+                        <option value="the-economist">The Economist</option>
+                        <option value="the-guardian-uk">The Guardian (UK)</option>
+                        <option value="the-new-york-times">The New York Times</option>
+                        <option value="the-verge">The Verge</option>
+                    </select>
+                    <br>
+                    <input type="button" class="btn btn-primary" id="btnSearchCurrentEvents" value="Search Current Events">
                 </div>
-                <input type="button" class="btn btn-primary" id="btnSubmitBingSearch" value="Search Bing News">
+            </form> 
+        </div>
+        <div class="col-lg-2">&nbsp;</div>
+        <div class="col-lg-5">
+            <h3>Summarize articles from Bing News</h3><br>
+            <form id="searchBingForm">
+                <div class="form-group">
+                    <input type="text" class="form-control input-lg" id="txtSearchBing" placeholder="Query Bing News Articles"><br>
+                    <input type="button" class="btn btn-primary" id="btnSubmitBingSearch" value="Search Bing News">
+                </div>
             </form> 
         </div>
     </div>
@@ -142,9 +169,10 @@ $(document).ready(function() {
             $("#displayResultsDiv").html("");
             $("#displayResultsDiv").hide();
             $("#divLoadingGif").show();
-            
+            var source = $("#selectSource").val();
+            // alert(source);
             $.post("getCurrentEvents.php", 
-            {}, 
+            {source: source}, 
             function(data) {
                 // $.post("searchWord.php",
                 // {searchWord: searchWord},

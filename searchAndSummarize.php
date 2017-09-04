@@ -11,7 +11,7 @@ if (isset($_POST["searchWord"])) {
     $query = htmlspecialchars($_POST["searchWord"]);
     $query = str_replace(" ", "+", $query);
 } else {
-    $query = "bitcoin";
+    // $query = "bitcoin";
 }
 
 // $url = "https://www.nytimes.com/2017/08/30/us/hurricane-center-timeline.html&p=devex";
