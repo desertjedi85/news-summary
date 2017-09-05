@@ -28,6 +28,12 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
 $contents = curl_exec($ch);
+$info = curl_getinfo($ch);
+
+if ($info["http_code"] != 200) {
+    echo "News Service Unavailable<br><br>";
+    exit;
+}
 $myContents = json_decode($contents, true);
 
 $articles = ($myContents["articles"]);
