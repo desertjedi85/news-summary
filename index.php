@@ -31,6 +31,30 @@
         #big {
 
         }
+
+        form {
+            margin-top: 5px;
+        }
+
+        @media screen and (max-width: 800px) {
+            .searchHeader {
+                display: none;
+            }
+
+            #mobileSearchHeader {
+                display: block;
+            }
+        }
+
+        @media screen and (min-width: 800px) {
+            .searchHeader {
+                display: block;
+            }
+
+            #mobileSearchHeader {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -39,15 +63,18 @@
 
 
 <br />
-<br />  
+<br />
 <div class="container">
     <div class="row">
         <div id="topDiv" class="big">
             <div class="col-lg-5">
+                <div id="mobileSearchHeader" style="">
+                    <h3>Get Summaries Of The News!</h3><br>
+                </div>
                 <div class="searchHeader">
                     <h3>Summarize articles from top news sites</h3><br>
                 </div>
-                <form id="searchBingForm">
+                <form id="searchSourcesForm">
                     <div class="form-group">
                         <select id="selectSource" class="form-control input-lg" name="selectSource">
                             <option value="reuters" selected>Reuters</option>
