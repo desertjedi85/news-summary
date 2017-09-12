@@ -60,11 +60,6 @@
 
 <body>
 
-<<<<<<< HEAD
-<br />
-<br />
-=======
->>>>>>> f85fe1d51775edc4c3f8e1cd3972c922b5cefbba
 <div class="container">
     <div class="row">
         <div id="topDiv" class="big">
