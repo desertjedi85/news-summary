@@ -24,10 +24,18 @@ function scrapeTrending($url) {
     $i = 0;
     $n = 0;
     $matchArray = array();
+
+    echo "<ul class='list-group'>";
+    $i = 0;
     foreach ($spaner as $element) {
         // echo $element->textContent;
-        $topic = $element->getAttribute("topic-query");
-        echo $topic . "<br>";
+        if ($i < 10) {
+            $topic = $element->getAttribute("topic-query");
+            echo "<li class='list-group-item'>" . $topic . "</li>";
+        }
+        $i++;
     }
+    
+    echo "</ul>";
     
 }

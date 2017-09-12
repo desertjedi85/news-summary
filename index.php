@@ -36,6 +36,14 @@
             margin-top: 5px;
         }
 
+        #trendingTopicsDiv {
+            float: right;
+        }
+
+        #trendingTopicsHeader {
+            color: #ffffff;
+        }
+
         @media screen and (max-width: 800px) {
             .searchHeader {
                 display: none;
@@ -113,18 +121,34 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-4">&nbsp;</div>
-        <div class="col-lg-4" id="divLoadingGif">
+        <div class="col-lg-1">&nbsp;</div>
+        <div class="col-lg-8" id="divLoadingGif">
             <img src="includes/images/loading.gif"><br>
             <span id="bePatient">Please be patient your results are loading...</span>
         </div>
+        <div class="col-lg-8" id='displayResultsDiv'>&nbsp;</div>
+        <div class="col-lg-3" id="trendingTopicsDiv">
+            <div class="panel panel-primary" id="trendingTopicsPanel">
+                <div class="panel-heading">
+                    <p><h3 id="trendingTopicsHeader">Trending Topics</h3></p>
+                </div>
+                <div class="panel-body">
+                    <div id="trendingTopicsList">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-lg-1">&nbsp;</div> -->
+        
+            
+       
     </div>
     <br>
     <div class="row">
-        <div class="col-lg-2">&nbsp;</div>
-        <div class="col-lg-8" id='displayResultsDiv'>
-            
-        </div>
+        <div class="col-lg-1">&nbsp;</div>
+        
+        
     </div>
 </div>
 
@@ -134,6 +158,9 @@
 
  <script>
 $(document).ready(function() {
+
+    $("#trendingTopicsPanel").hide();
+
     $("#displayResultsDiv").scroll(function() {
         // alert ($("#displayResultsDiv").scrollTop());
         if ($("#displayResultsDiv").scrollTop() > 2) {
@@ -149,6 +176,19 @@ $(document).ready(function() {
         }
         
     });
+
+    $.post("scrapeBingTrendingTopics.php", 
+            function(data) {
+                $("#trendingTopicsList").html(data);
+            })
+            .done(function() {
+                $("#trendingTopicsPanel").show();
+                $("#trendingTopicsDiv").show();
+            })
+            .fail(function() {
+                // $("#divLoadingGif").hide();
+                alert("Loading Trending Topics Failed");
+            });
 
     $("#divLoadingGif").hide();
     // $("#tblDisplayResults").DataTable();
