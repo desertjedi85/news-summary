@@ -19,23 +19,25 @@ function scrapeTrending($url) {
     
     $classname="trd_card";
     $finder = new DomXPath($dom);
-    $spaner = $finder->query("//*[contains(@class, '$classname')]");
-    
-    $i = 0;
-    $n = 0;
-    $matchArray = array();
 
-    echo "<ul class='list-group'>";
-    $i = 0;
-    foreach ($spaner as $element) {
-        // echo $element->textContent;
-        if ($i < 10) {
-            $topic = $element->getAttribute("topic-query");
-            echo "<li class='list-group-item'>" . $topic . "</li>";
+    if ($spaner = $finder->query("//*[contains(@class, '$classname')]")) {
+        $i = 0;
+        $n = 0;
+        $matchArray = array();
+    
+        echo "<ul class='list-group'>";
+        foreach ($spaner as $element) {
+            // echo $element->textContent;
+            if ($i < 10) {
+                $topic = $element->getAttribute("topic-query");
+                echo "<button class='list-group-item list-group-item-action btnTrending' value='" . $topic . "'>" . $topic . "</button><br>";
+                // echo "<a href='searchAndSummarize.php?q=" . htmlentities($topic) . "' class='linkTrending'>" . $topic . "</a><br>";
+            }
+            $i++;
         }
-        $i++;
+        
+        echo "</ul>";
+    } else {
+        echo "Topics Not Loaded";
     }
-    
-    echo "</ul>";
-    
 }

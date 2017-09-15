@@ -26,7 +26,7 @@ foreach ($urlARRAY as $url) {
     $errorArrayNoText = array();
     
     if (remoteURLExists($url) === true) {
-        if (!preg_match("/www\.cnn\.com/",$url) && !preg_match("/www\.foxsports\.com/",$url) && !preg_match("/www\.ft\.com/",$url) && !preg_match("/www\.time\.com/",$url)) {
+        if (!preg_match("/www\.cnn\.com/",$url) && !preg_match("/www\.usatoday\.com/",$url) && !preg_match("/www\.foxsports\.com/",$url) && !preg_match("/www\.ft\.com/",$url) && !preg_match("/www\.time\.com/",$url)) {
             getArticle($url,$titleArray,$articleArray,$errorArrayNoText);
             
             if (count($titleArray) > 0 && count($articleArray) > 0) {

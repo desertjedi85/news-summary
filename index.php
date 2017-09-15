@@ -20,7 +20,8 @@
         }
 
         #displayResultsDiv {
-            height: 500px;
+            height: 750px;
+            width: 65%;
             overflow-y: auto;
         }
 
@@ -42,6 +43,45 @@
 
         #trendingTopicsHeader {
             color: #ffffff;
+        }
+
+        #divLoadingGif
+        {
+        display : none;
+        }
+        #divLoadingGif.show
+        {
+        display : block;
+        position : fixed;
+        z-index: 100;
+        background-image : url('includes/images/loading.gif');
+        /* background-color:#fff; */
+        opacity : 0.6;
+        background-repeat : no-repeat;
+        background-position : inherit;
+        left : 25%;
+        bottom : 0;
+        right : 0;
+        top : 50%;
+        margin: 0 auto;
+        }
+        #divLoadingGif.hide {
+            display: none;
+        }
+        #loadinggif.show
+        {
+        left : 50%;
+        top : 50%;
+        position : absolute;
+        z-index : 101;
+        width : 32px;
+        height : 32px;
+        margin-left : -16px;
+        margin-top : -16px;
+        }
+        div.content {
+        width : 1000px;
+        height : 1000px;
         }
 
         @media screen and (max-width: 800px) {
@@ -122,33 +162,29 @@
     </div>
     <div class="row">
         <div class="col-lg-1">&nbsp;</div>
-        <div class="col-lg-8" id="divLoadingGif">
-            <img src="includes/images/loading.gif"><br>
+        <!-- <div class="col-lg-6" id="divLoadingGif">
+            <img src="includes/images/loading.gif" height="200px"><br>
             <span id="bePatient">Please be patient your results are loading...</span>
-        </div>
-        <div class="col-lg-8" id='displayResultsDiv'>&nbsp;</div>
+        </div> -->
+        <div class="col-lg-6" id='displayResultsDiv'>&nbsp;</div>
         <div class="col-lg-3" id="trendingTopicsDiv">
             <div class="panel panel-primary" id="trendingTopicsPanel">
                 <div class="panel-heading">
                     <p><h3 id="trendingTopicsHeader">Trending Topics</h3></p>
                 </div>
                 <div class="panel-body">
-                    <div id="trendingTopicsList">
-                        
-                    </div>
+                    <div id="trendingTopicsList"></div>
                 </div>
             </div>
         </div>
-        <!-- <div class="col-lg-1">&nbsp;</div> -->
-        
-            
-       
     </div>
     <br>
     <div class="row">
         <div class="col-lg-1">&nbsp;</div>
-        
-        
+        <div class="col-lg-6" id="divLoadingGif">
+            <!-- <img src="includes/images/loading.gif" height="200px"><br> -->
+            <span id="bePatient">Please be patient your results are loading...</span>
+        </div>
     </div>
 </div>
 
@@ -160,6 +196,8 @@
 $(document).ready(function() {
 
     $("#trendingTopicsPanel").hide();
+
+    
 
     $("#displayResultsDiv").scroll(function() {
         // alert ($("#displayResultsDiv").scrollTop());
@@ -180,26 +218,52 @@ $(document).ready(function() {
     $.post("scrapeBingTrendingTopics.php", 
             function(data) {
                 $("#trendingTopicsList").html(data);
+                $( ".list-group-item-action" ).on( "click", function() {
+                    $("#displayResultsDiv").html("");
+                    // $("div#divLoadingGif").addClass('show');
+                    $("div#divLoadingGif").addClass('show');
+
+                    var searchWord = $(this).attr("value");
+
+                    $.post("searchAndSummarize.php", 
+                    {searchWord: searchWord}, 
+                    function(data) {
+                        // $("div#divLoadingGif").removeClass('show');
+                        $("div#divLoadingGif").removeClass('show');
+                        $("div#divLoadingGif").addClass('hide');
+                        $("#displayResultsDiv").html(data);
+                    })
+                    .done(function() {
+                        $("#displayResultsDiv").show();
+                    })
+                    .fail(function() {
+                        // $("div#divLoadingGif").removeClass('show');
+                        $("div#divLoadingGif").removeClass('show');
+                        $("div#divLoadingGif").addClass('hide');
+                        alert("Search Failed.  Please Try Again Later.");
+                    });
+                });
             })
             .done(function() {
                 $("#trendingTopicsPanel").show();
                 $("#trendingTopicsDiv").show();
             })
             .fail(function() {
-                // $("#divLoadingGif").hide();
+                // $("div#divLoadingGif").removeClass('show');
                 alert("Loading Trending Topics Failed");
             });
 
-    $("#divLoadingGif").hide();
+    $("div#divLoadingGif").removeClass('show');
     // $("#tblDisplayResults").DataTable();
 
+     
     
 
     $('#txtSearchBing').keypress(function (e) {
         if (e.which == 13 || e.which == 10) {
             e.preventDefault();
             $("#displayResultsDiv").html("");
-            $("#divLoadingGif").show();
+            $("div#divLoadingGif").addClass('show');
             var searchWord = $("#txtSearchBing").val();
             $.post("searchAndSummarize.php", 
             {searchWord: searchWord}, 
@@ -207,7 +271,7 @@ $(document).ready(function() {
                 // $.post("searchWord.php",
                 // {searchWord: searchWord},
                 // function(data) {
-                //     $("#divLoadingGif").hide();
+                //     $("div#divLoadingGif").removeClass('show');
                 //     $("#displayResultsDiv").html(data);
                 // })
             })
@@ -215,13 +279,13 @@ $(document).ready(function() {
                 $.post("searchAndSummarize.php", 
                 {searchWord: searchWord},
                 function(data) {
-                    $("#divLoadingGif").hide();
+                    $("div#divLoadingGif").removeClass('show');
                     $("#displayResultsDiv").html(data);
                 })
                 $("#displayResultsDiv").show();
             })
             .fail(function() {
-                $("#divLoadingGif").hide();
+                $("div#divLoadingGif").removeClass('show');
                 alert("Search Failed.  Please Try Again Later.");
             });
             // .always(function() {
@@ -234,7 +298,7 @@ $(document).ready(function() {
             e.preventDefault();
             $("#displayResultsDiv").html("");
             $("#displayResultsDiv").hide();
-            $("#divLoadingGif").show();
+            $("div#divLoadingGif").addClass('show');
             var searchWord = $("#txtSearchBing").val();
             $.post("searchAndSummarize.php", 
             {searchWord: searchWord}, 
@@ -242,7 +306,7 @@ $(document).ready(function() {
                 // $.post("searchWord.php",
                 // {searchWord: searchWord},
                 // function(data) {
-                //     $("#divLoadingGif").hide();
+                //     $("div#divLoadingGif").removeClass('show');
                 //     $("#displayResultsDiv").html(data);
                 // })
             })
@@ -250,13 +314,13 @@ $(document).ready(function() {
                 $.post("searchAndSummarize.php", 
                 {searchWord: searchWord},
                 function(data) {
-                    $("#divLoadingGif").hide();
+                    $("div#divLoadingGif").removeClass('show');
                     $("#displayResultsDiv").html(data);
                 })
                 $("#displayResultsDiv").show();
             })
             .fail(function() {
-                $("#divLoadingGif").hide();
+                $("div#divLoadingGif").removeClass('show');
                 alert("Search Failed.  Please Try Again Later.");
             });
             // .always(function() {
@@ -268,7 +332,7 @@ $(document).ready(function() {
             e.preventDefault();
             $("#displayResultsDiv").html("");
             $("#displayResultsDiv").hide();
-            $("#divLoadingGif").show();
+            $("div#divLoadingGif").addClass('show');
             var source = $("#selectSource").val();
             // alert(source);
             $.post("getCurrentEvents.php", 
@@ -277,18 +341,18 @@ $(document).ready(function() {
                 // $.post("searchWord.php",
                 // {searchWord: searchWord},
                 // function(data) {
-                //     $("#divLoadingGif").hide();
+                //     $("div#divLoadingGif").removeClass('show');
                 //     $("#displayResultsDiv").html(data);
                 // })
             })
             .done(function(data) {
                 
-                $("#divLoadingGif").hide();
+                $("div#divLoadingGif").removeClass('show');
                 $("#displayResultsDiv").html(data);
                 $("#displayResultsDiv").show();
             })
             .fail(function() {
-                $("#divLoadingGif").hide();
+                $("div#divLoadingGif").removeClass('show');
                 alert("Search Failed.  Please Try Again Later.");
             });
             // .always(function() {
@@ -299,6 +363,8 @@ $(document).ready(function() {
     
     
 });
+
+
 
 </script>
 
