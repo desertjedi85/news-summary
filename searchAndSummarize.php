@@ -106,7 +106,7 @@ function getBingResults($query,&$urlARRAY) {
     $newsURL = "https://api.cognitive.microsoft.com/bing/v5.0/news/search";
 
     // $query = "Bitcoin";
-    $count = 30;
+    $count = 15;
     $sURL = $newsURL."?q=".$query."&count=".$count."&mkt=en-US";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $sURL); 
