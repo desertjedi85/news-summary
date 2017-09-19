@@ -9,8 +9,8 @@ if (isset($_POST["source"])) {
 // ini_set("include_path", "/home/searchcu/public_html/". ini_get("include_path") );
 ini_set('max_execution_time', 200);
 
-require("/home/searchcu/public_html/vendor/autoload.php");
-// require("vendor\autoload.php");
+// require("/home/searchcu/public_html/vendor/autoload.php");
+require("vendor\autoload.php");
 
 use Goose\Client as GooseClient;
 use PhpScience\TextRank\Tool\StopWords\English;
@@ -18,12 +18,13 @@ use PhpScience\TextRank\Tool\StopWords\English;
 
 // $sources = array("google-news","reuters","associated-press");
 // $source = "reuters";
-$sortBy = "top";
+// $sortBy = "top";
 
-$url = "https://newsapi.org/v1/articles?source=" . $source . "&sortBy=" . $sortBy . "&apiKey=6229b7f3b9034dffb6977ff90b484d5c";
+$url = "https://newsapi.org/v1/articles?source=" . $source . "&apiKey=6229b7f3b9034dffb6977ff90b484d5c";
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url); 
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -31,7 +32,7 @@ $contents = curl_exec($ch);
 $info = curl_getinfo($ch);
 
 if ($info["http_code"] != 200) {
-    echo "News Service Unavailable<br><br>";
+    echo "<br><br>HTTP Code: " . $info["http_code"] . "<br>News Service Unavailable<br><br>";
     exit;
 }
 
@@ -176,10 +177,8 @@ function remoteURLExists($url) {
 }
 
 function updateMetaData ($source) {
-    list($db,$user,$pass,$host) = getConfigData();
     $ip = $_SERVER["REMOTE_ADDR"];
-//    $mysqli = new \mysqli($host, $user, $pass, $db);
-    $mysqli = new \mysqli('localhost','searchcu_update','UpdateMyData!','searchcu_searches');
+    $mysqli = new \mysqli('localhost', 'searchcu_update', 'UpdateMyData!', 'searchcu_searches');
     if ($mysqli->connect_errno) {
         echo "Errno: " . $mysqli->connect_errno . "\n";
         echo "Error: " . $mysqli->connect_error . "\n";
@@ -189,25 +188,7 @@ function updateMetaData ($source) {
 
     $stmt = $mysqli->prepare("INSERT INTO metadata (ip,source) VALUES (?,?)");
     $stmt->bind_param('ss', $ip,$source);
-    if ($stmt === FALSE) {
-        die($mysqli->error);
-    }
     $stmt->execute();
 
     // echo "URL Added Successfully.";
-}
-
-function getConfigData() {
-    $data = file_get_contents("db.config");
-    if (preg_match_all("/DB=(.*)\nUSER=(.*)\nPASS=(.*)\nHOST=(.*)/",$data,$match)) {
-        $db = $match[1][0];
-        $user = $match[2][0];
-        $pass = $match[3][0];
-        $host = $match[4][0];
-
-        $array = array($db,$user,$pass,$host);
-        return $array;
-    } else {
-        echo "Invalid Config File<br>";
-    }
 }

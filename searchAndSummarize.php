@@ -9,6 +9,7 @@ use PhpScience\TextRank\Tool\StopWords\English;
 
 if (isset($_POST["searchWord"])) {
     $query = htmlspecialchars($_POST["searchWord"]);
+    $keywordQuery = htmlspecialchars($_POST["searchWord"]);
     $query = str_replace(" ", "+", $query);
 } else {
     // $query = "bitcoin";
@@ -18,7 +19,7 @@ if (isset($_POST["searchWord"])) {
 
 $urlARRAY = array();
 // $blacklistArray = array("cnn.com");
-getBingResults($query,$urlARRAY);
+getBingResults($query,$keywordQuery,$urlARRAY);
 
 foreach ($urlARRAY as $url) {
     $titleArray = array();
@@ -101,9 +102,11 @@ function summarize($text,&$result) {
     return $result;
 }
 
-function getBingResults($query,&$urlARRAY) {
+function getBingResults($query,$keywordQuery,&$urlARRAY) {
     // Bing Endpoints
     $newsURL = "https://api.cognitive.microsoft.com/bing/v5.0/news/search";
+
+    updateMetaData($keywordQuery);
 
     // $query = "Bitcoin";
     $count = 15;
@@ -169,6 +172,23 @@ function addURL ($url,$query,&$urlARRAY) {
     $query = strtolower($query);
 
     $urlARRAY[] = $url;
+}
+
+function updateMetaData ($query) {
+    $ip = $_SERVER["REMOTE_ADDR"];
+    $mysqli = new \mysqli('localhost', 'searchcu_update', 'UpdateMyData!', 'searchcu_searches');
+    if ($mysqli->connect_errno) {
+        echo "Errno: " . $mysqli->connect_errno . "\n";
+        echo "Error: " . $mysqli->connect_error . "\n";
+        // exit();
+        //TODO: Add error table
+    }
+
+    $stmt = $mysqli->prepare("INSERT INTO metadata (ip,query) VALUES (?,?)");
+    $stmt->bind_param('ss', $ip,$query);
+    $stmt->execute();
+
+    // echo "URL Added Successfully.";
 }
 
 function remoteURLExists($url) {

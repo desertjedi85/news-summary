@@ -121,10 +121,10 @@
                 <form id="searchSourcesForm">
                     <div class="form-group">
                         <select id="selectSource" class="form-control input-lg" name="selectSource">
-                            <option value="reuters" selected>Reuters</option>
+                            <option value="reuters">Reuters</option>
                             <option value="bbc-news">BBC News</option>
                             <option value="google-news">Google News</option>
-                            <option value="ars-technica">Ars Technica</option>
+                            <option value="ars-technica" selected>Ars Technica</option>
                             <option value="bbc-sport">BBC Sport</option>
                             <option value="bloomberg">Bloomberg</option>
                             <option value="business-insider">Business Insider</option>
