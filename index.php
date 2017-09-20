@@ -92,8 +92,29 @@
             #mobileSearchHeader {
                 display: block;
             }
-        }
 
+            #trendingTopicsDiv {
+                display: none;
+            }
+
+            #divLoadingGif.show {
+            display : block;
+            position : fixed;
+            z-index: 100;
+            background-image : url('includes/images/loading.gif');
+            background-color : #fff;
+            opacity : 1.0;
+            background-repeat : no-repeat;
+            background-position : inherit;
+            left : 25%;
+            bottom : 0;
+            right : 0;
+            top : 50%;
+            margin-top: 50px;
+            margin-right: 0 auto;
+            margin-left: 0 auto;
+            }
+        }
         @media screen and (min-width: 800px) {
             .searchHeader {
                 display: block;
@@ -102,6 +123,8 @@
             #mobileSearchHeader {
                 display: none;
             }
+
+            
         }
     </style>
 </head>
@@ -214,7 +237,7 @@ $(document).ready(function() {
         }
         
     });
-
+    
     $.post("scrapeBingTrendingTopics.php", 
             function(data) {
                 $("#trendingTopicsList").html(data);
@@ -245,8 +268,12 @@ $(document).ready(function() {
                 });
             })
             .done(function() {
-                $("#trendingTopicsPanel").show();
-                $("#trendingTopicsDiv").show();
+                if ($('#trendingTopicsDiv').is(":hidden")) {
+
+                } else {
+                    $("#trendingTopicsPanel").show();
+                    $("#trendingTopicsDiv").show();
+                }
             })
             .fail(function() {
                 // $("div#divLoadingGif").removeClass('show');

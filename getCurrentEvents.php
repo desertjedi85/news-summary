@@ -9,8 +9,8 @@ if (isset($_POST["source"])) {
 // ini_set("include_path", "/home/searchcu/public_html/". ini_get("include_path") );
 ini_set('max_execution_time', 200);
 
-// require("/home/searchcu/public_html/vendor/autoload.php");
-require("vendor\autoload.php");
+require("/home/searchcu/public_html/vendor/autoload.php");
+// require("vendor\autoload.php");
 
 use Goose\Client as GooseClient;
 use PhpScience\TextRank\Tool\StopWords\English;
@@ -49,6 +49,7 @@ foreach ($articles as $articleData) {
 
     if (remoteURLExists($articleUrl) === true) {
         if (!preg_match("/www\.cnn\.com/",$articleUrl) && !preg_match("/www\.foxsports\.com/",$articleUrl) && !preg_match("/time\.com/",$articleUrl)) {
+            preg_replace("/https/","http",$articleUrl);
             $urlArray[] = $articleUrl;
             $articleTitle = $articleData["title"];
             // echo $articleTitle . "<br>";
