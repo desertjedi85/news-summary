@@ -49,7 +49,7 @@ foreach ($articles as $articleData) {
 
     if (remoteURLExists($articleUrl) === true) {
         if (!preg_match("/www\.cnn\.com/",$articleUrl) && !preg_match("/www\.foxsports\.com/",$articleUrl) && !preg_match("/time\.com/",$articleUrl)) {
-            preg_replace("/https/","http",$articleUrl);
+            // preg_replace("/https/","http",$articleUrl);
             $urlArray[] = $articleUrl;
             $articleTitle = $articleData["title"];
             // echo $articleTitle . "<br>";

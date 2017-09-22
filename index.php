@@ -144,10 +144,10 @@
                 <form id="searchSourcesForm">
                     <div class="form-group">
                         <select id="selectSource" class="form-control input-lg" name="selectSource">
-                            <option value="reuters">Reuters</option>
+                            <option value="reuters" selected>Reuters</option>
                             <option value="bbc-news">BBC News</option>
                             <option value="google-news">Google News</option>
-                            <option value="ars-technica" selected>Ars Technica</option>
+                            <option value="ars-technica">Ars Technica</option>
                             <option value="bbc-sport">BBC Sport</option>
                             <option value="bloomberg">Bloomberg</option>
                             <option value="business-insider">Business Insider</option>
@@ -173,12 +173,12 @@
         <div class="col-lg-2">&nbsp;</div>
         <div class="col-lg-5">
             <div class="searchHeader">
-                <h3>Summarize articles from Bing News</h3><br>
+                <h3>Summarize articles from a Search</h3><br>
             </div>
             <form id="searchBingForm">
                 <div class="form-group">
-                    <input type="text" class="form-control input-lg" id="txtSearchBing" placeholder="Query Bing News Articles"><br>
-                    <input type="button" class="btn btn-primary" id="btnSubmitBingSearch" value="Search Bing News">
+                    <input type="text" class="form-control input-lg" id="txtSearchBing" placeholder="Enter Search Term..."><br>
+                    <input type="button" class="btn btn-primary" id="btnSubmitSearch" value="Search News">
                 </div>
             </form> 
         </div>
@@ -295,21 +295,19 @@ $(document).ready(function() {
             $.post("searchAndSummarize.php", 
             {searchWord: searchWord}, 
             function(data) {
-                // $.post("searchWord.php",
+                $("div#divLoadingGif").removeClass('show');
+                $("#displayResultsDiv").html(data);
+
+                $("#displayResultsDiv").show();
+            })
+            .done(function() {
+                // $.post("searchAndSummarize.php", 
                 // {searchWord: searchWord},
                 // function(data) {
                 //     $("div#divLoadingGif").removeClass('show');
                 //     $("#displayResultsDiv").html(data);
                 // })
-            })
-            .done(function() {
-                $.post("searchAndSummarize.php", 
-                {searchWord: searchWord},
-                function(data) {
-                    $("div#divLoadingGif").removeClass('show');
-                    $("#displayResultsDiv").html(data);
-                })
-                $("#displayResultsDiv").show();
+                // $("#displayResultsDiv").show();
             })
             .fail(function() {
                 $("div#divLoadingGif").removeClass('show');
@@ -321,7 +319,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#btnSubmitBingSearch').click(function (e) {
+    $('#btnSubmitSearch').click(function (e) {
             e.preventDefault();
             $("#displayResultsDiv").html("");
             $("#displayResultsDiv").hide();
@@ -330,21 +328,20 @@ $(document).ready(function() {
             $.post("searchAndSummarize.php", 
             {searchWord: searchWord}, 
             function(data) {
-                // $.post("searchWord.php",
+
+                $("div#divLoadingGif").removeClass('show');
+                $("#displayResultsDiv").html(data);
+
+                $("#displayResultsDiv").show();
+            })
+            .done(function() {
+                // $.post("searchAndSummarize.php", 
                 // {searchWord: searchWord},
                 // function(data) {
                 //     $("div#divLoadingGif").removeClass('show');
                 //     $("#displayResultsDiv").html(data);
                 // })
-            })
-            .done(function() {
-                $.post("searchAndSummarize.php", 
-                {searchWord: searchWord},
-                function(data) {
-                    $("div#divLoadingGif").removeClass('show');
-                    $("#displayResultsDiv").html(data);
-                })
-                $("#displayResultsDiv").show();
+                // $("#displayResultsDiv").show();
             })
             .fail(function() {
                 $("div#divLoadingGif").removeClass('show');

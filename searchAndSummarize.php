@@ -4,6 +4,8 @@ namespace PhpScience\TextRank;
 ini_set('max_execution_time', 200);
 
 require("/home/searchcu/public_html/vendor/autoload.php");
+// require("vendor/autoload.php");
+
 use Goose\Client as GooseClient;
 use PhpScience\TextRank\Tool\StopWords\English;
 
@@ -12,77 +14,122 @@ if (isset($_POST["searchWord"])) {
     $keywordQuery = htmlspecialchars($_POST["searchWord"]);
     $query = str_replace(" ", "+", $query);
 } else {
-    // $query = "bitcoin";
+    $query = "war";
+    $query = str_replace(" ", "+", $query);
 }
 
-// $url = "https://www.nytimes.com/2017/08/30/us/hurricane-center-timeline.html&p=devex";
+getNewsApiResults($query,$keywordQuery);
 
-$urlARRAY = array();
-// $blacklistArray = array("cnn.com");
-getBingResults($query,$keywordQuery,$urlARRAY);
 
-foreach ($urlARRAY as $url) {
-    $titleArray = array();
-    $articleArray = array();
-    $errorArrayNoText = array();
+
+function getNewsApiResults($query,$keywordQuery) {
+    // Bing Endpoints
+    // $source = "reuters";
+
+    $url = "http://beta.newsapi.org/v2/everything?q=" . $query . "&language=en&apiKey=6229b7f3b9034dffb6977ff90b484d5c";
+
+    updateMetaData($keywordQuery);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url); 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    // curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    //     'Content-Type: multipart/form-data',
+    //     'Ocp-Apim-Subscription-Key: 0aa4ba06e81545688052db6a517a3a1e'
+    // ));
+
+    $contents = curl_exec($ch);
+    $info = curl_getinfo($ch);
     
-    if (remoteURLExists($url) === true) {
-        if (!preg_match("/www\.cnn\.com/",$url) && !preg_match("/www\.usatoday\.com/",$url) && !preg_match("/www\.foxsports\.com/",$url) && !preg_match("/www\.ft\.com/",$url) && !preg_match("/www\.time\.com/",$url)) {
-            getArticle($url,$titleArray,$articleArray,$errorArrayNoText);
-            
-            if (count($titleArray) > 0 && count($articleArray) > 0) {
-                echo "<div class='panel panel-info'>";
-                for ($i=0; $i < count($titleArray); $i++) {
-                    echo "<div class='panel-heading'><h4><a href=".$url.">" . $titleArray[$i] . "</a></h4></div><br>";
-                    echo "<div class='panel-body'><p class='articleText'>" . $articleArray[$i] . "</p></div><br><br>";  
-                }
-                echo "</div>";
-            } else {
-                "Error returning articles.<br><br>";
-            }
-
-            if (count($errorArrayNoText) > 0) {
-                echo "<div class='panel panel-info'>";
-                echo "<div class='panel-heading'><h4>" . count($errorArrayNoText) . " URLs had errors</h4></div>";
-                echo "<div class='panel-body'>";
-                foreach ($errorArrayNoText as $errorUrl) {
-                    echo "<p class='articleText'>" . $errorUrl . "</p>";
-                }
-                echo "</div>";
+    if ($info["http_code"] != 200) {
+        echo "<br><br>HTTP Code: " . $info["http_code"] . "<br>News Service Unavailable<br><br>";
+        exit;
+    }
+    
+    $myContents = json_decode($contents, true);
+    
+    $articles = ($myContents["articles"]);
+    
+    $articleArray = array();
+    $titleArray = array();
+    $urlArray = array();
+    $errorArrayNoText = array();
+    // foreach ($articles as $articleData) {
+    for ($i = 0; $i < 5; $i++) {
+        $articleUrl = $articles[$i]["url"];
+    
+        if (remoteURLExists($articleUrl) === true) {
+            if (!preg_match("/www\.cnn\.com/",$articleUrl) && !preg_match("/www\.foxsports\.com/",$articleUrl) && !preg_match("/time\.com/",$articleUrl)) {
+                // preg_replace("/https/","http",$articleUrl);
+                $urlArray[] = $articleUrl;
+                $articleTitle = $articles[$i]["title"];
+                // echo $articleTitle . "<br>";
+                $titleArray[] = $articleTitle;
+                
+                getArticle($articleUrl,$articleArray,$errorArrayNoText);
             }
         }
     }
+
+    // print_r($articleArray);
+    
+    if (count($titleArray) > 0 && count($articleArray) > 0 && count($urlArray) > 0) {
+        // updateMetaData($source);
+        for ($i = 0; $i < count($titleArray); $i++) {
+            if (isset($titleArray[$i]) && isset($articleArray[$i]) && isset($urlArray[$i])) {
+                echo "<div class='panel panel-info'>";
+                echo "<div class='panel-heading'>";
+                echo "<h4><a href=" . $urlArray[$i] . ">";
+                echo $titleArray[$i];
+                echo "</a></h4>";
+                echo "</div><div class='panel-body'>";
+                echo "<p class='articleText'>";
+                if ($articleArray[$i]) {
+                    echo $articleArray[$i];
+                } else {
+                    echo "Error returning article text";
+                }
+                echo "</p>";
+                echo "</div>";
+                echo "</div>";
+            }
+        }
+        
+    } else {
+        // echo "Article did not return results<br>";
+    }
 }
 
-function getArticle($url,&$titleArray,&$articleArray,&$errorArrayNoText) {
+function getArticle($url,&$articleArray,&$errorArrayNoText) {
     $goose = new GooseClient();
     $article = $goose->extractContent($url);
     
-    if ($articleText = $article->getCleanedArticleText()) {
-        // echo "ArticleText: " . $articleText . "<br><br>";
-        $articleTitle = $article->getTitle();
-        if (!isset($articleTitle) && !isset($articleText)) {
-            $articleTitle = "Article Data Could Not Be Retrieved";
-        }
+    if ($articleText = $article->getCleanedArticleText()) { // Investigate if this is where things are being slowed down
 
-        
+        // echo "ArticleText: " . $articleText . "<br><br>";
+
         $result = array();
         summarize($articleText,$result);
-        $titleArray[] = $articleTitle;
 
         $string = "";
         foreach ($result as $line) {
-            $string .= $line . " ";
+            // $string .= $line . " ";
+            foreach ($line as $sentence) {
+                $string .= $sentence . " ";
+            }
+            // var_dump($line);
         }
         $articleArray[] = $string;
         // return $articleArray;
     } else {
-        $errorArrayNoText[] = $url;
+        // $errorArrayNoText[] = $url;
+        // echo "Article not parsed<br>";
     }
     
 }
 
-function summarize($text,&$result) {
+function summarize($articleText,&$resultsArray) {
     // String contains a long text, see the /res/sample1.txt file.
     
     
@@ -95,83 +142,12 @@ function summarize($text,&$result) {
     // $result = $api->getOnlyKeyWords($text); 
     
     // Array of the sentences from the most important part of the text:
-    $result = $api->getHighlights($text); 
+    $resultsArray[] = $api->getHighlights($articleText); 
     
     // Array of the most important sentences from the text:
     // $result = $api->summarizeTextBasic($text);
-    return $result;
-}
-
-function getBingResults($query,$keywordQuery,&$urlARRAY) {
-    // Bing Endpoints
-    $newsURL = "https://api.cognitive.microsoft.com/bing/v5.0/news/search";
-
-    updateMetaData($keywordQuery);
-
-    // $query = "Bitcoin";
-    $count = 15;
-    $sURL = $newsURL."?q=".$query."&count=".$count."&mkt=en-US";
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $sURL); 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        'Content-Type: multipart/form-data',
-        'Ocp-Apim-Subscription-Key: 0aa4ba06e81545688052db6a517a3a1e'
-    ));
-
-    $contents = curl_exec($ch);
-    $myContents = json_decode($contents);
-    if(count($myContents->value) > 0) {
-        
-        foreach ($myContents->value as $content) {
-            // echo $content->url . "<br>";
-            $url = $content->url;
-
-            if (preg_match('/,/',$url)) {
-                $splitLine = preg_split('/,/',$url);
-                foreach ($splitLine as $url) {
-                    if (preg_match('/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/',$url)) {
-                        if (preg_match_all('/(https:\/\/http:\/\/|www\.)bing\.com(.*)?[r]=(.*)/',$url,$match)) {
-                            $url = $match[3][0];
-                            $url = rawurldecode($url);
-                            if (preg_match('/\w{1}/',$url)) {
-                                addURL($url,$query,$urlARRAY);
-                            }
-                        } else {
-                            $url = rawurldecode($url);
-                            if (preg_match('/\w{1}/',$url)) {
-                                addURL($url,$query,$urlARRAY);
-                            }
-                        }
-                    }
-                }
-            } else {
-                if (preg_match('/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/',$url)) {
-                    if (preg_match_all('/(https:\/\/http:\/\/|www\.)bing\.com(.*)?[r]=(.*)/',$splitLine,$match)) {
-                        $url = $match[3][0];
-                        $url = rawurldecode($url);
-                        if (preg_match('/\w{1}/',$url)) {
-                            addURL($url,$query,$urlARRAY);
-                        }
-                    } else {
-                        $url = rawurldecode($url);
-                        if (preg_match('/\w{1}/',$url)) {
-                            addURL($url,$query,$urlARRAY);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-function addURL ($url,$query,&$urlARRAY) {
-    $url = strtolower($url);
-    $query = strtolower($query);
-
-    $urlARRAY[] = $url;
+    // return $result;
+    // print_r($result);
 }
 
 function updateMetaData ($query) {
@@ -183,11 +159,9 @@ function updateMetaData ($query) {
         // exit();
         //TODO: Add error table
     }
-
     $stmt = $mysqli->prepare("INSERT INTO metadata (ip,query) VALUES (?,?)");
     $stmt->bind_param('ss', $ip,$query);
     $stmt->execute();
-
     // echo "URL Added Successfully.";
 }
 
