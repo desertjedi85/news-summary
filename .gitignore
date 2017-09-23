@@ -1,4 +1,5 @@
 vendor/
 apikeys
-db.config
+dbconfig.php
 .idea/
+scripts/

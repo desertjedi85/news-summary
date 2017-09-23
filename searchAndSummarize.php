@@ -151,8 +151,9 @@ function summarize($articleText,&$resultsArray) {
 }
 
 function updateMetaData ($query) {
+    require("dbconfig.php");
     $ip = $_SERVER["REMOTE_ADDR"];
-    $mysqli = new \mysqli('localhost', 'searchcu_update', 'UpdateMyData!', 'searchcu_searches');
+    $mysqli = new \mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if ($mysqli->connect_errno) {
         echo "Errno: " . $mysqli->connect_errno . "\n";
         echo "Error: " . $mysqli->connect_error . "\n";
