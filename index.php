@@ -2,9 +2,16 @@
 
 <html>
 <head>
-    <title>Search Current Events</title>
+    <title>Get Summaries of the News!</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="Summarize articles from top news sites. Reuters, BBC News, Google News, Ars Technica, BBC Sport, Bloomberg, Business Insider, Business Insider UK, ESPN .." />
+    <meta name="keywords" content="news, current events, search current events, summarize news, summarized news, get summaries of news, get summaries of current events" />
+    <meta name="robots" content="index,follow" />
+    <meta name="DC.title" content="Get Summaries of the News" />
+
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
