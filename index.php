@@ -56,6 +56,10 @@
         {
         display : none;
         }
+
+        #divLoadingGifMobile {
+            display: none;
+        }
         #divLoadingGif.show
         {
         display : block;
@@ -78,7 +82,7 @@
         #loadinggif.show
         {
         left : 50%;
-        top : 50%;
+        top : 60%;
         position : absolute;
         z-index : 101;
         width : 32px;
@@ -89,6 +93,11 @@
         div.content {
         width : 1000px;
         height : 1000px;
+        }
+
+        #divAd {
+            /* margin-top:200px; */
+            margin-left:50px;
         }
 
         @media screen and (max-width: 800px) {
@@ -104,7 +113,14 @@
                 display: none;
             }
 
-            #divLoadingGif.show {
+            /* Testing */
+            /* #divLoadingGifMobile {
+                display: block;
+            } */
+
+
+
+            /* #divLoadingGif.show {
             display : block;
             position : fixed;
             z-index: 100;
@@ -120,7 +136,7 @@
             margin-top: 50px;
             margin-right: 0 auto;
             margin-left: 0 auto;
-            }
+            } */
         }
         @media screen and (min-width: 800px) {
             .searchHeader {
@@ -196,6 +212,10 @@
             <img src="includes/images/loading.gif" height="200px"><br>
             <span id="bePatient">Please be patient your results are loading...</span>
         </div> -->
+        <div class="col-lg-6" id="divLoadingGifMobile">
+            <!-- <img src="includes/images/loading.gif" height="200px"><br> -->
+            <span id="bePatient">Please be patient your results are loading...</span>
+        </div>
         <div class="col-lg-6" id='displayResultsDiv'>&nbsp;</div>
         <div class="col-lg-3" id="trendingTopicsDiv">
             <div class="panel panel-primary" id="trendingTopicsPanel">
@@ -213,7 +233,14 @@
         <div class="col-lg-1">&nbsp;</div>
         <div class="col-lg-6" id="divLoadingGif">
             <!-- <img src="includes/images/loading.gif" height="200px"><br> -->
+            <div id="divAd">
+                <a href="http://www.tkqlhce.com/click-8425137-11475437" target="_top">
+                <img src="http://www.ftjcfx.com/image-8425137-11475437" width="120" height="90" alt="" border="0"/></a>
+            </div>
+
             <span id="bePatient">Please be patient your results are loading...</span>
+
+            
         </div>
     </div>
 </div>
@@ -224,9 +251,10 @@
 
  <script>
 $(document).ready(function() {
-
+    // var mobile = false;
     $("#trendingTopicsPanel").hide();
 
+    
     
 
     $("#displayResultsDiv").scroll(function() {
@@ -395,9 +423,7 @@ $(document).ready(function() {
     
 });
 
-
-
 </script>
-
+<!-- <script type="text/javascript" language="javascript" src="http://www.jdoqocy.com/placeholder-28523489?target=_top&mouseover=N"></script> -->
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 namespace PhpScience\TextRank;
+require("config/dbconfig.php");
 
 if (isset($_POST["source"])) {
     $source = htmlspecialchars($_POST["source"]);
@@ -39,7 +40,7 @@ if ($info["http_code"] != 200) {
 $myContents = json_decode($contents, true);
 
 $articles = ($myContents["articles"]);
-
+curl_close($ch);
 $articleArray = array();
 $titleArray = array();
 $urlArray = array();
@@ -59,6 +60,8 @@ foreach ($articles as $articleData) {
         }
     }
 }
+
+
 
 if (count($titleArray) > 0 && count($articleArray) > 0 && count($urlArray) > 0) {
     updateMetaData($source);
@@ -179,7 +182,7 @@ function remoteURLExists($url) {
 
 function updateMetaData ($source) {
     $ip = $_SERVER["REMOTE_ADDR"];
-    $mysqli = new \mysqli('localhost', 'searchcu_update', 'UpdateMyData!', 'searchcu_searches');
+    $mysqli = new \mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     if ($mysqli->connect_errno) {
         echo "Errno: " . $mysqli->connect_errno . "\n";
         echo "Error: " . $mysqli->connect_error . "\n";
