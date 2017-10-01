@@ -78,19 +78,29 @@ function getNewsApiResults($query,$keywordQuery) {
         // updateMetaData($source);
         for ($i = 0; $i < count($titleArray); $i++) {
             if (isset($titleArray[$i]) && isset($articleArray[$i]) && isset($urlArray[$i])) {
+                // echo "<div class='panel panel-info'>";
+                // echo "<div class='panel-heading'>";
+                // echo "<h4><a href=" . $urlArray[$i] . ">";
+                // echo $titleArray[$i];
+                // echo "</a></h4>";
+                // echo "</div><div class='panel-body'>";
+                // echo "<p class='articleText'>";
+                // if ($articleArray[$i]) {
+                //     echo $articleArray[$i];
+                // } else {
+                //     echo "Error returning article text";
+                // }
+                // echo "</p>";
+                // echo "</div>";
+                // echo "</div>";
                 echo "<div class='panel panel-info'>";
                 echo "<div class='panel-heading'>";
-                echo "<h4><a href=" . $urlArray[$i] . ">";
-                echo $titleArray[$i];
-                echo "</a></h4>";
-                echo "</div><div class='panel-body'>";
-                echo "<p class='articleText'>";
-                if ($articleArray[$i]) {
-                    echo $articleArray[$i];
-                } else {
-                    echo "Error returning article text";
-                }
-                echo "</p>";
+                echo "<h4><a href=" . $urlArray[$i] . ">" . $titleArray[$i] . "</a></h4>";
+                echo "</div><div class='panel-body' id='articleId$i'>";
+                echo "<p class='articleText'>" . $articleArray[$i] . "</p>";
+                echo "</div>";
+                echo "<div class='panel-footer'>";
+                echo "<button class='btn btn-info btnCopy' id ='btnCopy$i' data-clipboard-target='#articleId$i'>Copy to Clipboard</button>";
                 echo "</div>";
                 echo "</div>";
             }

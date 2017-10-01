@@ -97,7 +97,17 @@
 
         #divAd {
             /* margin-top:200px; */
-            margin-left:50px;
+            /* margin-left:50px; */
+            /* margin: 0 auto; */
+            /* margin-left: -100; */
+        }
+
+        #divAdImg {
+            margin-left: -100;
+        }
+
+        #divLoadingText {
+            margin-top: 150;
         }
 
         @media screen and (max-width: 800px) {
@@ -233,12 +243,11 @@
         <div class="col-lg-1">&nbsp;</div>
         <div class="col-lg-6" id="divLoadingGif">
             <!-- <img src="includes/images/loading.gif" height="200px"><br> -->
-            <div id="divAd">
-                <a href="http://www.tkqlhce.com/click-8425137-11475437" target="_top">
-                <img src="http://www.ftjcfx.com/image-8425137-11475437" width="120" height="90" alt="" border="0"/></a>
+            <?php require("loadingAd.php"); ?>
+            
+            <div id="divLoadingText">
+                <span id="bePatient">Please be patient your results are loading...</span>
             </div>
-
-            <span id="bePatient">Please be patient your results are loading...</span>
 
             
         </div>
@@ -248,12 +257,13 @@
 <footer class="footer" id="footer">
 <span class="text-muted">Powered by NewsApi.org</span>
 </footer>
-
+<script src="node_modules/clipboard/dist/clipboard.min.js"></script>
  <script>
+     
 $(document).ready(function() {
     // var mobile = false;
     $("#trendingTopicsPanel").hide();
-
+    
     
     
 
@@ -293,6 +303,10 @@ $(document).ready(function() {
                     })
                     .done(function() {
                         $("#displayResultsDiv").show();
+                        $('.btnCopy').each(function(i, obj) {
+                            var id = obj.id;
+                            obj.addEventListener("click",copyToClipboard(id));
+                        });
                     })
                     .fail(function() {
                         // $("div#divLoadingGif").removeClass('show');
@@ -319,6 +333,12 @@ $(document).ready(function() {
     // $("#tblDisplayResults").DataTable();
 
      
+     function copyToClipboard(id) {
+         return function() {
+            new Clipboard("#" + id);
+            // alert(id);
+         }
+     }
     
 
     $('#txtSearchBing').keypress(function (e) {
@@ -336,13 +356,10 @@ $(document).ready(function() {
                 $("#displayResultsDiv").show();
             })
             .done(function() {
-                // $.post("searchAndSummarize.php", 
-                // {searchWord: searchWord},
-                // function(data) {
-                //     $("div#divLoadingGif").removeClass('show');
-                //     $("#displayResultsDiv").html(data);
-                // })
-                // $("#displayResultsDiv").show();
+                $('.btnCopy').each(function(i, obj) {
+                    var id = obj.id;
+                    obj.addEventListener("click",copyToClipboard(id));
+                });
             })
             .fail(function() {
                 $("div#divLoadingGif").removeClass('show');
@@ -370,13 +387,10 @@ $(document).ready(function() {
                 $("#displayResultsDiv").show();
             })
             .done(function() {
-                // $.post("searchAndSummarize.php", 
-                // {searchWord: searchWord},
-                // function(data) {
-                //     $("div#divLoadingGif").removeClass('show');
-                //     $("#displayResultsDiv").html(data);
-                // })
-                // $("#displayResultsDiv").show();
+                $('.btnCopy').each(function(i, obj) {
+                    var id = obj.id;
+                    obj.addEventListener("click",copyToClipboard(id));
+                });
             })
             .fail(function() {
                 $("div#divLoadingGif").removeClass('show');
@@ -403,12 +417,17 @@ $(document).ready(function() {
                 //     $("div#divLoadingGif").removeClass('show');
                 //     $("#displayResultsDiv").html(data);
                 // })
-            })
-            .done(function(data) {
-                
                 $("div#divLoadingGif").removeClass('show');
                 $("#displayResultsDiv").html(data);
                 $("#displayResultsDiv").show();
+            })
+            .done(function(data) {
+                // var btnCopy = document.getElementById("btnCopy0");
+                $('.btnCopy').each(function(i, obj) {
+                    var id = obj.id;
+                    obj.addEventListener("click",copyToClipboard(id));
+                });
+                
             })
             .fail(function() {
                 $("div#divLoadingGif").removeClass('show');
@@ -420,7 +439,9 @@ $(document).ready(function() {
     });
 
     
-    
+    // window.onload=function() {
+        
+    //  }
 });
 
 </script>

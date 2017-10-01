@@ -4,3 +4,4 @@ config/
 .idea/
 scripts/
 affiliatelinks
+node_modules/

@@ -70,8 +70,11 @@ if (count($titleArray) > 0 && count($articleArray) > 0 && count($urlArray) > 0) 
             echo "<div class='panel panel-info'>";
             echo "<div class='panel-heading'>";
             echo "<h4><a href=" . $urlArray[$i] . ">" . $titleArray[$i] . "</a></h4>";
-            echo "</div><div class='panel-body'>";
+            echo "</div><div class='panel-body' id='articleId$i'>";
             echo "<p class='articleText'>" . $articleArray[$i] . "</p>";
+            echo "</div>";
+            echo "<div class='panel-footer'>";
+            echo "<button class='btn btn-info btnCopy' id ='btnCopy$i' data-clipboard-target='#articleId$i'>Copy to Clipboard</button>";
             echo "</div>";
             echo "</div>";
         }
