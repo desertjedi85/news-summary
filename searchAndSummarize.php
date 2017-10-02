@@ -1,9 +1,17 @@
 <?php
 namespace PhpScience\TextRank;
 
+require("config/constants.php");
+
+ini_set("display_errors", 0);
+ini_set("log_errors", 1);
+
+//Define where do you want the log to go, syslog or a file of your liking with
+ini_set("error_log", $WEBHOMEDIR . "logs/phplog.log"); // or ini_set("error_log", "/path/to/syslog/file");
+
 ini_set('max_execution_time', 200);
 
-require("/home/searchcu/public_html/vendor/autoload.php");
+require($WEBHOMEDIR . "public_html/vendor/autoload.php");
 // require("vendor/autoload.php");
 
 use Goose\Client as GooseClient;

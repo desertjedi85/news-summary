@@ -1,4 +1,10 @@
-<?php error_reporting( E_ALL ); ?>
+<?php
+ini_set("display_errors", 0);
+ini_set("log_errors", 1);
+
+//Define where do you want the log to go, syslog or a file of your liking with
+ini_set("error_log", "syslog"); // or ini_set("error_log", "/path/to/syslog/file");
+?>
 
 <html>
 <head>
